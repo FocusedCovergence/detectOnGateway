@@ -17,6 +17,8 @@ export {
         out_bytes: count &log;
         tcp_flags: string &log;
         duration_ms: double &log;
+        in_pkts: count &log;
+        out_pkts: count &log;
     };
 }
 
@@ -50,6 +52,17 @@ event connection_finished(c: connection) {
         duration_ms = |c$duration| * 1000.0;
     }
 
+    local in_pkts = 0;
+    if ( c?$orig && c$orig?$num_pkts ) {
+        in_pkts = c$orig$num_pkts;
+    }
+
+    local out_pkts = 0;
+    if ( c?$resp && c$resp?$num_pkts ) {
+        out_pkts = c$resp$num_pkts;
+    }
+
+
     local info: Info = [$ts=network_time(),
                         $src_ip=c$id$orig_h,
                         $src_port=c$id$orig_p,
@@ -59,6 +72,8 @@ event connection_finished(c: connection) {
                         $service=service,
                         $in_bytes=in_bytes,
                         $out_bytes=out_bytes,
+                        $in_pkts=in_pkts,
+                        $out_pkts=out_pkts,
                         $tcp_flags=tcp_flags,
                         $duration_ms=duration_ms];
 
