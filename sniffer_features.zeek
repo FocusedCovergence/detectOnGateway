@@ -6,7 +6,6 @@ export {
     redef enum Log::ID += { LOG };
 
     type Info: record {
-        ts: time &log;
         src_ip: addr &log;
         src_port: port &log;
         dst_ip: addr &log;
@@ -15,10 +14,10 @@ export {
         service: string &log;
         in_bytes: count &log;
         out_bytes: count &log;
-        tcp_flags: count &log;
-        duration_ms: double &log;
         in_pkts: count &log;
         out_pkts: count &log;
+        tcp_flags: count &log;
+        duration_ms: double &log;
     };
 }
 
@@ -82,8 +81,7 @@ event connection_finished(c: connection) {
     }
 
 
-    local info: Info = [$ts=network_time(),
-                        $src_ip=c$id$orig_h,
+    local info: Info = [$src_ip=c$id$orig_h,
                         $src_port=c$id$orig_p,
                         $dst_ip=c$id$resp_h,
                         $dst_port=c$id$resp_p,
