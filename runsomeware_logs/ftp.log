@@ -1,0 +1,21 @@
+#separator \x09
+#set_separator	,
+#empty_field	(empty)
+#unset_field	-
+#path	ftp
+#open	2025-05-04-02-24-19
+#fields	ts	uid	id.orig_h	id.orig_p	id.resp_h	id.resp_p	user	password	command	arg	mime_type	file_size	reply_code	reply_msg	data_channel.passive	data_channel.orig_h	data_channel.resp_h	data_channel.resp_p	fuid
+#types	time	string	addr	port	addr	port	string	string	string	string	string	count	count	string	bool	addr	addr	port	string
+1556433067.692451	C6pY604itb3Z1b1lMf	192.168.1.180	47296	196.216.2.24	21	anonymous	ftp@example.com	EPSV	-	-	-	229	Entering Extended Passive Mode (|||31377|).	T	192.168.1.180	196.216.2.24	31377	-
+1556433069.778521	C6pY604itb3Z1b1lMf	192.168.1.180	47296	196.216.2.24	21	anonymous	ftp@example.com	RETR	ftp://196.216.2.24/pub/stats/afrinic/delegated-afrinic-extended-latest.md5	-	74	226	Transfer complete.	-	-	-	-	FtmJE64Yptfhlm313
+1556433075.438054	CyvpDv3v8DqDoesc6	192.168.1.180	47318	196.216.2.24	21	anonymous	ftp@example.com	EPSV	-	-	-	229	Entering Extended Passive Mode (|||32366|).	T	192.168.1.180	196.216.2.24	32366	-
+1556433077.492859	CyvpDv3v8DqDoesc6	192.168.1.180	47318	196.216.2.24	21	anonymous	ftp@example.com	RETR	ftp://196.216.2.24/pub/stats/afrinic/delegated-afrinic-extended-latest	text/plain	507848	226	Transfer complete.	-	-	-	-	FAreD42uLRVTZJNyNf
+1556433086.748588	CutB7A1Hza7DYZ4KDl	192.168.1.180	56640	202.12.29.205	21	anonymous	ftp@example.com	EPSV	-	-	-	229	Entering Extended Passive Mode (|||59356|)	T	192.168.1.180	202.12.29.205	59356	-
+1556433086.845830	CutB7A1Hza7DYZ4KDl	192.168.1.180	56640	202.12.29.205	21	anonymous	ftp@example.com	RETR	ftp://202.12.29.205/pub/stats/apnic/delegated-apnic-extended-latest.md5	-	73	226	Transfer complete	-	-	-	-	F1cQ6W15BnDA6qWcad
+1556433087.385279	CgTmXx1b42bskeJOdg	192.168.1.180	56644	202.12.29.205	21	anonymous	ftp@example.com	EPSV	-	-	-	229	Entering Extended Passive Mode (|||65517|)	T	192.168.1.180	202.12.29.205	65517	-
+1556433087.484809	CgTmXx1b42bskeJOdg	192.168.1.180	56644	202.12.29.205	21	anonymous	ftp@example.com	RETR	ftp://202.12.29.205/pub/stats/apnic/delegated-apnic-extended-latest	text/plain	5876741	226	Transfer complete	-	-	-	-	FkFqmX29qL2Kr3fBpl
+1556433115.754653	CNQUYv4FQHbEiZUwJ	192.168.1.180	40948	199.71.0.151	21	anonymous	ftp@example.com	EPSV	-	-	-	229	Entering Extended Passive Mode (|||50689|)	T	192.168.1.180	199.71.0.151	50689	-
+1556433116.776184	CNQUYv4FQHbEiZUwJ	192.168.1.180	40948	199.71.0.151	21	anonymous	ftp@example.com	RETR	ftp://199.71.0.151/pub/stats/arin/delegated-arin-extended-latest.md5	-	67	226	Transfer complete	-	-	-	-	FX4DNN3k4pUIFhJkC2
+1556433119.495522	CP5Msd1G1zrZEtwzyk	192.168.1.180	40966	199.71.0.151	21	anonymous	ftp@example.com	EPSV	-	-	-	229	Entering Extended Passive Mode (|||65369|)	T	192.168.1.180	199.71.0.151	65369	-
+1556433120.476163	CP5Msd1G1zrZEtwzyk	192.168.1.180	40966	199.71.0.151	21	anonymous	ftp@example.com	RETR	ftp://199.71.0.151/pub/stats/arin/delegated-arin-extended-latest	text/plain	9540106	226	Transfer complete	-	-	-	-	FW64Yj1tNCK6i3CSf9
+#close	2025-05-04-02-24-24

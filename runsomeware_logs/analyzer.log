@@ -1,0 +1,11 @@
+#separator \x09
+#set_separator	,
+#empty_field	(empty)
+#unset_field	-
+#path	analyzer
+#open	2025-05-04-02-24-21
+#fields	ts	cause	analyzer_kind	analyzer_name	uid	fuid	id.orig_h	id.orig_p	id.resp_h	id.resp_p	failure_reason	failure_data
+#types	time	string	string	string	string	string	addr	port	addr	port	string	string
+1556433159.064158	violation	packet	VXLAN	CONTsX3RBzlFXjXQV4	-	192.203.230.10	53	192.168.1.190	4789	VXLAN 'I' flag not set	\xc4\xb1\x84\x00\x00\x01\x00\x0e\x00\x00\x00\x1b\x00\x00\x02\x00\x01\x00\x00\x02\x00\x01\x00\x07\xe9\x00\x00\x14\x01a\x0croot-serv
+1556433159.064158	violation	protocol	SIP	CLgHnb4LySFduJlJIk	-	203.119.86.101	53	192.168.1.190	5060	Binpac exception: binpac exception: string mismatch at /usr/src/packages/BUILD/src/analyzer/protocol/sip/sip-protocol.pac:25: \x0aexpected pattern: "[[:alnum:]@[:punct:]]+"\x0aactual data: "\x017\x019\x013\x018\x012\x01f\x01f\x011\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x010\x012\x010\x01f\x01f\x03ip6\x04arpa"	-
+#close	2025-05-04-02-24-24
