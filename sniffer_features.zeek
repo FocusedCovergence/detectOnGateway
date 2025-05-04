@@ -15,7 +15,7 @@ export {
         service: string &log;
         in_bytes: count &log;
         out_bytes: count &log;
-        tcp_flags: string &log;
+        tcp_flags: count &log;
         duration_ms: double &log;
         in_pkts: count &log;
         out_pkts: count &log;
@@ -27,6 +27,30 @@ event zeek_init() {
 }
 
 event connection_finished(c: connection) {
+
+    local flag_map = {
+        ["F"] = 1,
+        ["S"] = 2,
+        ["R"] = 4,
+        ["P"] = 8,
+        ["A"] = 16,
+        ["U"] = 32,
+        ["E"] = 64,
+        ["C"] = 128
+    };
+
+    local tcpHis = "-";
+    if (c?$history) {
+        tcpHis = c$history;
+    }
+
+    local tcp_flag_val: count = 0;
+    for ( ch in tcpHis ) {
+        if ( ch in flag_map )
+            tcp_flag_val += flag_map[ch];
+    }
+
+
     local service = "-";
     if ( c?$service ) {
         service = fmt("%s", c$service);
@@ -40,11 +64,6 @@ event connection_finished(c: connection) {
     local out_bytes = 0;
     if ( c?$resp && c$resp?$size ) {
         out_bytes = c$resp$size;
-    }
-
-    local tcp_flags = "-";
-    if ( c?$history ) {
-        tcp_flags = c$history;
     }
 
     local duration_ms = 0.0;
@@ -74,7 +93,7 @@ event connection_finished(c: connection) {
                         $out_bytes=out_bytes,
                         $in_pkts=in_pkts,
                         $out_pkts=out_pkts,
-                        $tcp_flags=tcp_flags,
+                        $tcp_flags=tcp_flag_val,
                         $duration_ms=duration_ms];
 
     Log::write(LOG, info);
