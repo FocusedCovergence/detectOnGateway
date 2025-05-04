@@ -1,66 +1,64 @@
 @load base/protocols/conn
-@load protocols/conn/conn-size 
 
-module ExtractFeatures;
+module NetflowExtract;
 
 export {
     redef enum Log::ID += { LOG };
 
     type Info: record {
-        ts: time &log;                    
-        src_ip: addr &log;                 # IPV4_SRC_ADDR
-        src_port: port &log;               # L4_SRC_PORT
-        dst_ip: addr &log;                 # IPV4_DST_ADDR
-        dst_port: port &log;               # L4_DST_PORT
-        proto: string &log;                # PROTOCOL
-        service: string &log;              # L7_PROTO
-        in_bytes: count &log;              # IN_BYTES
-        out_bytes: count &log;             # OUT_BYTES
-        in_pkts: count &log;               # IN_PKTS
-        out_pkts: count &log;              # OUT_PKTS
-        tcp_flags: string &log;            # TCP_FLAGS
-        duration_ms: double &log;          # FLOW_DURATION_MILLISECONDS
+        ts:              time;
+        uid:             string;
+        src_ip:          addr;
+        src_port:        port;
+        dst_ip:          addr;
+        dst_port:        port;
+        proto:           count;
+        in_bytes:        count;
+        out_bytes:       count;
+        in_pkts:         count;
+        out_pkts:        count;
+        tcp_flags:       string;
+        duration_ms:     double;
     };
 }
 
+global log_netflow: log_id = Log::create_stream(NetflowExtract::LOG, [$columns=NetflowExtract::Info]);
 
-event zeek_init()
-    {
-    Log::create_stream(LOG, [$columns=Info]);
+event zeek_init() {
+    Log::write_header(log_netflow, "NetFlow-like Features");
+}
+
+event connection_state_remove(c: connection) {
+    local proto = c$id$resp_p == 0 ? 0 : c$id$proto;  # fallback if port unknown
+
+    local in_bytes = c$orig$size;
+    local out_bytes = c$resp$size;
+    local in_pkts = c$orig$num_pkts;
+    local out_pkts = c$resp$num_pkts;
+
+    local flags = "";
+    if (c$history != null) {
+        flags = c$history;
     }
 
-
-event connection_finished(c: connection)
-    {
-    if ( c?$id && c?$orig_h && c?$resp_h )
-        {
-        local src_ip = c$id$orig_h;
-        local src_port = c$id$orig_p;
-        local dst_ip = c$id$resp_h;
-        local dst_port = c$id$resp_p;
-        local proto = c$id$proto;
-        local service = if (c?$service) c$service else "-";
-        local in_bytes = if (c?$orig_bytes) c$orig_bytes else 0;
-        local out_bytes = if (c?$resp_bytes) c$resp_bytes else 0;
-        local in_pkts = if (c?$orig_pkts) c$orig_pkts else 0;
-        local out_pkts = if (c?$resp_pkts) c$resp_pkts else 0;
-        local tcp_flags = if (c?$history) c$history else "-";
-        local duration_ms = if (c?$duration) c$duration * 1000.0 else 0.0;
-
-        local info: Info = [$ts=network_time(),
-                            $src_ip=src_ip,
-                            $src_port=src_port,
-                            $dst_ip=dst_ip,
-                            $dst_port=dst_port,
-                            $proto=proto,
-                            $service=service,
-                            $in_bytes=in_bytes,
-                            $out_bytes=out_bytes,
-                            $in_pkts=in_pkts,
-                            $out_pkts=out_pkts,
-                            $tcp_flags=tcp_flags,
-                            $duration_ms=duration_ms];
-
-        Log::write(LOG, info);
-        }
+    local dur = 0.0;
+    if (c$duration != null) {
+        dur = c$duration * 1000.0;  # seconds to ms
     }
+
+    local r: Info = [$ts=c$start_time,
+                     $uid=c$uid,
+                     $src_ip=c$id$orig_h,
+                     $src_port=c$id$orig_p,
+                     $dst_ip=c$id$resp_h,
+                     $dst_port=c$id$resp_p,
+                     $proto=proto,
+                     $in_bytes=in_bytes,
+                     $out_bytes=out_bytes,
+                     $in_pkts=in_pkts,
+                     $out_pkts=out_pkts,
+                     $tcp_flags=flags,
+                     $duration_ms=dur];
+
+    Log::write(log_netflow, r);
+}
