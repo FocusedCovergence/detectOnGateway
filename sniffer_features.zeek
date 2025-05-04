@@ -17,7 +17,7 @@ export {
         in_pkts: count &log;
         out_pkts: count &log;
         tcp_flags: count &log;
-        duration_ms: double &log;
+        duration_ms: count &log;
     };
 }
 
@@ -65,9 +65,9 @@ event connection_finished(c: connection) {
         out_bytes = c$resp$size;
     }
 
-    local duration_ms = 0.0;
+    local duration_ms = 0;
     if ( c?$duration ) {
-        duration_ms = |c$duration| * 1000.0;
+        duration_ms = double_to_count(|c$duration| * 1000.0 + 0.5);
     }
 
     local in_pkts = 0;
