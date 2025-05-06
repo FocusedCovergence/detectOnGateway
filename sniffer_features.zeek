@@ -1,11 +1,13 @@
+@load base/frameworks/logging
 @load base/protocols/conn
 
 module ExtractFeatures;
 
 export {
-    redef enum Log::ID += { LOG };
+    redef enum Log::ID += { EXTRACT_FEATURES };
 
     type Info: record {
+        ts: time &log;
         src_ip: addr &log;
         src_port: port &log;
         dst_ip: addr &log;
@@ -22,7 +24,8 @@ export {
 }
 
 event zeek_init() {
-    Log::create_stream(LOG, [$columns=Info, $path="extract_features"]);
+    Log::create_stream(ExtractFeatures::EXTRACT_FEATURES,
+     [$columns=Info, $path="extract_features"]);
 }
 
 event connection_finished(c: connection) {
@@ -81,7 +84,9 @@ event connection_finished(c: connection) {
     }
 
 
-    local info: Info = [$src_ip=c$id$orig_h,
+
+    local info: Info = [$ts=network_time(),
+                        $src_ip=c$id$orig_h,
                         $src_port=c$id$orig_p,
                         $dst_ip=c$id$resp_h,
                         $dst_port=c$id$resp_p,
@@ -94,7 +99,7 @@ event connection_finished(c: connection) {
                         $tcp_flags=tcp_flag_val,
                         $duration_ms=duration_ms];
 
-    Log::write(LOG, info);
+    Log::write(ExtractFeatures::EXTRACT_FEATURES, info);
 }
 
 
